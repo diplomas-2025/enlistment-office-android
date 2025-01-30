@@ -470,50 +470,52 @@ fun UserInfoScreen(
                             elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
                             shape = MaterialTheme.shapes.medium
                         ) {
-                            RowContentText(
-                                leftText = "Выдан",
-                                rightText = it.issued
-                            )
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                RowContentText(
+                                    leftText = "Выдан",
+                                    rightText = it.issued
+                                )
 
-                            RowContentText(
-                                leftText = "Дата выдачи",
-                                rightText = it.dateIssue
-                            )
+                                RowContentText(
+                                    leftText = "Дата выдачи",
+                                    rightText = it.dateIssue
+                                )
 
-                            RowContentText(
-                                leftText = "Серия",
-                                rightText = it.series
-                            )
+                                RowContentText(
+                                    leftText = "Серия",
+                                    rightText = it.series
+                                )
 
-                            RowContentText(
-                                leftText = "Номер",
-                                rightText = it.number
-                            )
+                                RowContentText(
+                                    leftText = "Номер",
+                                    rightText = it.number
+                                )
 
-                            RowContentText(
-                                leftText = "Имя",
-                                rightText = it.first_name
-                            )
+                                RowContentText(
+                                    leftText = "Имя",
+                                    rightText = it.first_name
+                                )
 
-                            RowContentText(
-                                leftText = "Фамилия",
-                                rightText = it.last_name
-                            )
+                                RowContentText(
+                                    leftText = "Фамилия",
+                                    rightText = it.last_name
+                                )
 
-                            RowContentText(
-                                leftText = "Отчество",
-                                rightText = it.middle_name
-                            )
+                                RowContentText(
+                                    leftText = "Отчество",
+                                    rightText = it.middle_name
+                                )
 
-                            RowContentText(
-                                leftText = "День рождения",
-                                rightText = it.birthday
-                            )
+                                RowContentText(
+                                    leftText = "День рождения",
+                                    rightText = it.birthday
+                                )
 
-                            RowContentText(
-                                leftText = "Адресс",
-                                rightText = "г. ${it.addressCity} ул. ${it.addressStreet}, ${it.addressHouseNumber} кв. ${it.addressApartmentNumber}"
-                            )
+                                RowContentText(
+                                    leftText = "Адресс",
+                                    rightText = "г. ${it.addressCity} ул. ${it.addressStreet}, ${it.addressHouseNumber} кв. ${it.addressApartmentNumber}"
+                                )
+                            }
                         }
                     }
                 }

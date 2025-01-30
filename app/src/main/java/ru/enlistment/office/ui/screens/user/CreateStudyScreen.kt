@@ -1,5 +1,7 @@
 package ru.enlistment.office.ui.screens.user
 
+import android.app.DatePickerDialog
+import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
@@ -22,6 +24,8 @@ import ru.enlistment.office.data.network.networkApi
 import ru.enlistment.office.ui.view.BaseLottieAnimation
 import ru.enlistment.office.ui.view.BaseOutlinedTextField
 import ru.enlistment.office.ui.view.LottieAnimationType
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun CreateStudyScreen(
@@ -40,8 +44,29 @@ fun CreateStudyScreen(
     var endDate by remember { mutableStateOf("") }
     var postponement by remember { mutableStateOf(false) }
 
+    val calendar = Calendar.getInstance()
+
+    // Date picker dialog logic
+    val showStartDatePicker = remember { mutableStateOf(false) }
+    val showEndDatePicker = remember { mutableStateOf(false) }
+
+    val dateSetListener = { view: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+        val date = Calendar.getInstance()
+        date.set(year, month, dayOfMonth)
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val formattedDate = sdf.format(date.time)
+
+        if (showStartDatePicker.value) {
+            startDate = formattedDate
+            showStartDatePicker.value = false
+        } else if (showEndDatePicker.value) {
+            endDate = formattedDate
+            showEndDatePicker.value = false
+        }
+    }
+
     LaunchedEffect(key1 = Unit, block = {
-        if(update) {
+        if (update) {
             try {
                 val token = userDataStore.getAccessToken()
                 val response = networkApi.getUserById(accountId, "Bearer $token")
@@ -106,21 +131,17 @@ fun CreateStudyScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Start Date Input
-                BaseOutlinedTextField(
-                    value = startDate,
-                    onValueChange = { startDate = it },
-                    label = "Начало обучения"
-                )
+                // Start Date Picker
+                Button(onClick = { showStartDatePicker.value = true }) {
+                    Text("Выбрать дату начала: ${startDate.ifEmpty { "Не выбрано" }}")
+                }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // End Date Input
-                BaseOutlinedTextField(
-                    value = endDate,
-                    onValueChange = { endDate = it },
-                    label = "Конец обучения"
-                )
+                // End Date Picker
+                Button(onClick = { showEndDatePicker.value = true }) {
+                    Text("Выбрать дату окончания: ${endDate.ifEmpty { "Не выбрано" }}")
+                }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -156,5 +177,16 @@ fun CreateStudyScreen(
                 }
             }
         }
+    }
+
+    // Show date picker dialogs
+    if (showStartDatePicker.value || showEndDatePicker.value) {
+        DatePickerDialog(
+            context,
+            dateSetListener,
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 }

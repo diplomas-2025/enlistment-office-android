@@ -1,10 +1,13 @@
 package ru.enlistment.office.ui.screens.user
 
+import android.app.DatePickerDialog
+import android.os.Build
+import android.widget.DatePicker
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -25,6 +28,8 @@ import ru.enlistment.office.data.network.networkApi
 import ru.enlistment.office.ui.view.BaseLottieAnimation
 import ru.enlistment.office.ui.view.BaseOutlinedTextField
 import ru.enlistment.office.ui.view.LottieAnimationType
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun CreatePassportScreen(
@@ -50,6 +55,26 @@ fun CreatePassportScreen(
     var addressHouseNumber by remember { mutableStateOf("") }
     var addressApartmentNumber by remember { mutableStateOf("") }
     var gender by remember { mutableStateOf(Gender.M) }
+
+    // For date picker dialogs
+    val calendar = Calendar.getInstance()
+    val showDateIssuePicker = remember { mutableStateOf(false) }
+    val showBirthdayPicker = remember { mutableStateOf(false) }
+
+    val dateSetListener = { view: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+        val date = Calendar.getInstance()
+        date.set(year, month, dayOfMonth)
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val formattedDate = sdf.format(date.time)
+
+        if (showDateIssuePicker.value) {
+            dateIssue = formattedDate
+            showDateIssuePicker.value = false
+        } else if (showBirthdayPicker.value) {
+            birthday = formattedDate
+            showBirthdayPicker.value = false
+        }
+    }
 
     LaunchedEffect(key1 = Unit, block = {
         if (update) {
@@ -112,7 +137,6 @@ fun CreatePassportScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-
                     // Passport Fields
                     BaseOutlinedTextField(
                         value = issued,
@@ -122,11 +146,10 @@ fun CreatePassportScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    BaseOutlinedTextField(
-                        value = dateIssue,
-                        onValueChange = { dateIssue = it },
-                        label = "Дата выдачи"
-                    )
+                    // Date Issue Picker Button
+                    Button(onClick = { showDateIssuePicker.value = true }) {
+                        Text("Дата выдачи: ${dateIssue.ifEmpty { "Не выбрано" }}")
+                    }
 
                     Spacer(modifier = Modifier.height(8.dp))
 
@@ -170,11 +193,10 @@ fun CreatePassportScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    BaseOutlinedTextField(
-                        value = birthday,
-                        onValueChange = { birthday = it },
-                        label = "День рождения"
-                    )
+                    // Birthday Picker Button
+                    Button(onClick = { showBirthdayPicker.value = true }) {
+                        Text("Дата рождения: ${birthday.ifEmpty { "Не выбрано" }}")
+                    }
 
                     Spacer(modifier = Modifier.height(8.dp))
 
@@ -260,7 +282,17 @@ fun CreatePassportScreen(
                     }
                 }
             }
-
         }
+    }
+
+    // Show date picker dialogs
+    if (showDateIssuePicker.value || showBirthdayPicker.value) {
+        DatePickerDialog(
+            context,
+            dateSetListener,
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 }
