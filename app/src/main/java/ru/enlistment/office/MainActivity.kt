@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                         startDestination = if(userDataStore.getAccessToken() == null)
                             "auth"
                         else
-                            "user",
+                            if (userDataStore.getIsAdmin()) "users" else "user",
                         builder = {
                             composable("auth") { AuthScreen(navController) }
                             composable("user?userId={userId}", arguments = listOf(

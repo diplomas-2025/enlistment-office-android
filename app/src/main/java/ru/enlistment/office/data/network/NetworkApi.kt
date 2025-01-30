@@ -24,73 +24,73 @@ import ru.enlistment.office.data.network.model.user.Work
 
 interface NetworkApi {
 
-    @POST("/users/login")
+    @POST("/enlistment-office-api/users/login")
     suspend fun login(@Body body: AuthRequest): Response<AuthResponse>
 
-    @GET("/users/info")
+    @GET("/enlistment-office-api/users/info")
     suspend fun getUserInfo(
         @Header("Authorization") token: String
     ): Response<User>
 
-    @GET("/users/{id}")
+    @GET("/enlistment-office-api/users/{id}")
     suspend fun getUserById(
         @Path("id") id: Int,
         @Header("Authorization") token: String
     ): Response<User>
 
-    @GET("/users")
+    @GET("/enlistment-office-api/users")
     suspend fun getUserAll(
         @Header("Authorization") token: String
     ): Response<List<UserShort>>
 
-    @POST("/users/{id}/accounting")
+    @POST("/enlistment-office-api/users/{id}/accounting")
     suspend fun userAddAccounting(
         @Path("id") id: Int,
         @Body body: CreateAccounting,
         @Header("Authorization") token: String
     ): Response<Unit?>
 
-    @POST("/users/accounting/{id}/work")
+    @POST("/enlistment-office-api/users/accounting/{id}/work")
     suspend fun userAddWork(
         @Path("id") id: Int,
         @Body body: Work,
         @Header("Authorization") token: String
     ): Response<Unit?>
 
-    @POST("/users/accounting/{id}/study")
+    @POST("/enlistment-office-api/users/accounting/{id}/study")
     suspend fun userAddStudy(
         @Path("id") id: Int,
         @Body body: Study,
         @Header("Authorization") token: String
     ): Response<Unit?>
 
-    @POST("/users/accounting/{id}/passport")
+    @POST("/enlistment-office-api/users/accounting/{id}/passport")
     suspend fun userAddPassport(
         @Path("id") id: Int,
         @Body body: Passport,
         @Header("Authorization") token: String
     ): Response<Unit?>
 
-    @POST("/users")
+    @POST("/enlistment-office-api/users")
     suspend fun addUser(
         @Query("email") email: String,
         @Query("password") password: String,
         @Header("Authorization") token: String
     ): Response<Unit?>
 
-    @POST("/enlistment-summon-document")
+    @POST("/enlistment-office-api/enlistment-summon-document")
     suspend fun addEnlistmentSummon(
         @Query("account_id") accountId: Int,
         @Query("type") type: EnlistmentSummonDocumentType,
         @Header("Authorization") token: String
     ): Response<Unit?>
 
-    @GET("/enlistment-offices")
+    @GET("/enlistment-office-api/enlistment-offices")
     suspend fun getAllEnlistmentOffices(): Response<List<EnlistmentOffice>>
 }
 
 private val retrofit = Retrofit.Builder()
-    .baseUrl("http://10.0.2.2:8080")
+    .baseUrl("https://spotdiff.ru/")
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 

@@ -27,9 +27,13 @@ class UserDataStore(context: Context) {
     fun save(authResponse: AuthResponse) {
         shared.edit()
             .putString("access_token", authResponse.accessToken)
-            .putInt("user_id", authResponse.id)
+            .putInt("user_id", authResponse.userId)
             .putBoolean("is_admin", isAdmin(authResponse.roles))
             .apply()
+    }
+
+    fun clear() {
+        shared.edit().clear().apply()
     }
 
     private fun isAdmin(r: List<UserRole>): Boolean {
